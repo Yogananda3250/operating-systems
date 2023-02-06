@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <pthread.h>
+#include <semaphore.h>
+
+#define NUM_THREADS 2
+
+int shared_mem = 0;
+sem_t sem;
+
+void *double_thread(void *arg)
+{
+    sem_wait(&sem);
+    int doubled = shared_mem * 2;
+    printf("Double thread: shared_mem = %d, doubled = %d\n", shared_mem, doubled);
+    sem_post(&sem);
+
+    return NULL;
+}
+
+void *five_times_thread(void *arg)
+{
+    sem_wait(&sem);
+    int five_times = shared_mem * 5;
+    printf("Five times thread: shared_mem = %d, five_times = %d\n", shared_mem, five_times);
+    sem_post(&sem);
+
+    return NULL;
+}
+
+int main()
+{
+    pthread_t threads[NUM_THREADS];
+
+    sem_init(&sem, 0, 1);
+
+    pthread_create(&threads[0], NULL, double_thread, NULL);
+    pthread_create(&threads[1], NULL, five_times_thread, NULL);
+
+    shared_mem = 5;
+
+    pthread_join(threads[0], NULL);
+    pthread_join(threads[1], NULL);
+
+    sem_destroy(&sem);
+
+    return 0;
+}
