@@ -1,0 +1,26 @@
+# define process data
+processes = [
+    {"process_id": "P1", "burst_time": 30, "priority": 2},
+    {"process_id": "P2", "burst_time": 5, "priority": 1},
+    {"process_id": "P3", "burst_time": 12, "priority": 3}
+]
+
+# sort processes by priority (lower priority value first)
+processes = sorted(processes, key=lambda x: x["priority"])
+
+# calculate waiting time and turnaround time for each process
+waiting_times = []
+turnaround_times = []
+current_time = 0
+for process in processes:
+    waiting_times.append(current_time)
+    current_time += process["burst_time"]
+    turnaround_times.append(current_time)
+
+# calculate average waiting time and average turnaround time
+avg_waiting_time = sum(waiting_times) / len(waiting_times)
+avg_turnaround_time = sum(turnaround_times) / len(turnaround_times)
+
+# print results
+print("Average Waiting Time:", avg_waiting_time)
+print("Average Turnaround Time:", avg_turnaround_time)
