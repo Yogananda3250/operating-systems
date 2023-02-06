@@ -1,0 +1,37 @@
+#include <stdio.h>
+
+#define NUM_PROCESSES 3
+
+int main()
+{
+    int computeTime[NUM_PROCESSES] = {2, 4, 8};
+    int waitingTime[NUM_PROCESSES];
+    int turnaroundTime[NUM_PROCESSES];
+
+    waitingTime[0] = 0;
+    for (int i = 1; i < NUM_PROCESSES; i++)
+    {
+        waitingTime[i] = waitingTime[i - 1] + computeTime[i - 1];
+    }
+
+    for (int i = 0; i < NUM_PROCESSES; i++)
+    {
+        turnaroundTime[i] = waitingTime[i] + computeTime[i];
+    }
+
+    int totalWaitingTime = 0;
+    int totalTurnaroundTime = 0;
+    for (int i = 0; i < NUM_PROCESSES; i++)
+    {
+        totalWaitingTime += waitingTime[i];
+        totalTurnaroundTime += turnaroundTime[i];
+    }
+
+    float averageWaitingTime = (float)totalWaitingTime / NUM_PROCESSES;
+    float averageTurnaroundTime = (float)totalTurnaroundTime / NUM_PROCESSES;
+
+    printf("Average Waiting Time: %.2f\n", averageWaitingTime);
+    printf("Average Turnaround Time: %.2f\n", averageTurnaroundTime);
+
+    return 0;
+}
