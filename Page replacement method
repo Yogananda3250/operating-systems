@@ -1,0 +1,61 @@
+#include <stdio.h>
+
+#define MAX_PAGE_FRAMES 3
+#define MAX_PAGE_REFERENCES 20
+
+int pageFrames[MAX_PAGE_FRAMES];
+int pageReferenceSequence[MAX_PAGE_REFERENCES] = {7,0,1,2,0,3,0,4,2,3,0,3,2,1,2,0,1,7,0,1};
+int numPageFaults = 0;
+
+int findLongestDemandFutureTime(int pageNum, int nextIndex) {
+  int futureTime = 0;
+  for (int i = nextIndex; i < MAX_PAGE_REFERENCES; i++) {
+    if (pageReferenceSequence[i] == pageNum) {
+      futureTime = i;
+      break;
+    }
+  }
+  return futureTime;
+}
+
+void addPage(int pageNum, int index) {
+  pageFrames[index] = pageNum;
+  numPageFaults++;
+}
+
+int main() {
+  int pageIndex = 0;
+  for (int i = 0; i < MAX_PAGE_REFERENCES; i++) {
+    int pageNum = pageReferenceSequence[i];
+    int pageFound = 0;
+    for (int j = 0; j < MAX_PAGE_FRAMES; j++) {
+      if (pageFrames[j] == pageNum) {
+        pageFound = 1;
+        break;
+      }
+    }
+    if (!pageFound) {
+      int longestDemandFutureTime = MAX_PAGE_REFERENCES;
+      int pageFrameIndex = 0;
+      for (int j = 0; j < MAX_PAGE_FRAMES; j++) {
+        if (pageFrames[j] == -1) {
+          addPage(pageNum, j);
+          break;
+        } else {
+          int currentFutureTime = findLongestDemandFutureTime(pageFrames[j], i + 1);
+          if (currentFutureTime > longestDemandFutureTime) {
+            longestDemandFutureTime = currentFutureTime;
+            pageFrameIndex = j;
+          }
+        }
+      }
+      if (pageFrames[pageFrameIndex] != -1) {
+        addPage(pageNum, pageFrameIndex);
+      }
+    }
+  }
+  
+  printf("Number of page faults: %d\n", numPageFaults);
+  
+  return 0;
+}
