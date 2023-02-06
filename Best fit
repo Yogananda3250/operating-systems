@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define NUM_BLOCKS 6
+#define NUM_PROCESSES 5
+
+int memory[NUM_BLOCKS];
+
+void initializeMemory() {
+  memory[0] = 300;
+  memory[1] = 600;
+  memory[2] = 350;
+  memory[3] = 200;
+  memory[4] = 750;
+  memory[5] = 125;
+}
+
+int bestFit(int processSize) {
+  int bestFitIndex = -1;
+  int bestFitDifference = -1;
+  for (int i = 0; i < NUM_BLOCKS; i++) {
+    if (memory[i] >= processSize) {
+      int difference = memory[i] - processSize;
+      if (bestFitDifference == -1 || difference < bestFitDifference) {
+        bestFitIndex = i;
+        bestFitDifference = difference;
+      }
+    }
+  }
+  return bestFitIndex;
+}
+
+int main() {
+  initializeMemory();
+  int processSizes[NUM_PROCESSES] = {115, 500, 358, 200, 375};
+  for (int i = 0; i < NUM_PROCESSES; i++) {
+    int bestFitIndex = bestFit(processSizes[i]);
+    if (bestFitIndex != -1) {
+      memory[bestFitIndex] -= processSizes[i];
+      printf("Process %d of size %d KB has been allocated to memory block %d\n",
+             i + 1, processSizes[i], bestFitIndex + 1);
+    } else {
+      printf("Process %d of size %d KB could not be allocated\n", i + 1, processSizes[i]);
+    }
+  }
+  return 0;
+}
