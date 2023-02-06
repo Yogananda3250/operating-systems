@@ -1,0 +1,38 @@
+#include<stdio.h>
+#include<math.h>
+
+#define MAX_TRACKS 5
+
+int findClosestTrack(int current_track, int tracks[], int tracks_accessed[]) {
+    int closest_track = -1;
+    int closest_distance = INT_MAX;
+    for (int i = 0; i < MAX_TRACKS; i++) {
+        if (!tracks_accessed[i]) {
+            int distance = abs(tracks[i] - current_track);
+            if (distance < closest_distance) {
+                closest_distance = distance;
+                closest_track = i;
+            }
+        }
+    }
+    return closest_track;
+}
+
+int main() {
+    int tracks[MAX_TRACKS] = {55, 58, 60, 70, 18};
+    int current_track = 55;
+    int total_head_movement = 0;
+
+    int tracks_accessed[MAX_TRACKS] = {0};
+    for (int i = 0; i < MAX_TRACKS; i++) {
+        int closest_track = findClosestTrack(current_track, tracks, tracks_accessed);
+        tracks_accessed[closest_track] = 1;
+        total_head_movement += abs(tracks[closest_track] - current_track);
+        current_track = tracks[closest_track];
+    }
+
+    int average_head_movement = total_head_movement / MAX_TRACKS;
+    printf("Average head movement: %d\n", average_head_movement);
+
+    return 0;
+}
