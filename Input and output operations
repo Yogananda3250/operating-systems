@@ -1,0 +1,55 @@
+#include <stdio.h>
+
+int contiguous_IO(int block_num)
+{
+    // In contiguous allocation, 1 I/O operation is needed to update the file control block
+    return 1;
+}
+
+int linked_IO(int block_num)
+{
+    // In linked allocation, 1 I/O operation is needed to update the current block and 1 I/O operation is needed to update the next block
+    return 2;
+}
+
+int indexed_IO(int block_num)
+{
+    // In indexed allocation, 1 I/O operation is needed to update the file control block and 1 I/O operation is needed to update the index block
+    return 2;
+}
+
+int main()
+{
+    int block_num;
+
+    printf("Enter block number (1 - 100): ");
+    scanf("%d", &block_num);
+
+    // Test case a: The block is added at the beginning
+    if (block_num == 1)
+    {
+        printf("Contiguous allocation requires %d disk I/O operations\n", contiguous_IO(block_num));
+        printf("Linked allocation requires %d disk I/O operations\n", linked_IO(block_num));
+        printf("Indexed allocation requires %d disk I/O operations\n", indexed_IO(block_num));
+    }
+    // Test case b: The block is added in the middle
+    else if (block_num > 1 && block_num < 100)
+    {
+        printf("Contiguous allocation requires %d disk I/O operations\n", contiguous_IO(block_num));
+        printf("Linked allocation requires %d disk I/O operations\n", linked_IO(block_num));
+        printf("Indexed allocation requires %d disk I/O operations\n", indexed_IO(block_num));
+    }
+    // Test case c: The block is added at the end
+    else if (block_num == 100)
+    {
+        printf("Contiguous allocation requires %d disk I/O operations\n", contiguous_IO(block_num));
+        printf("Linked allocation requires %d disk I/O operations\n", linked_IO(block_num));
+        printf("Indexed allocation requires %d disk I/O operations\n", indexed_IO(block_num));
+    }
+    else
+    {
+        printf("Invalid block number\n");
+    }
+
+    return 0;
+}
