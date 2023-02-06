@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <pthread.h>
+#include <semaphore.h>
+
+#define MAX_PROCESSES 5
+#define NUM_INSTANCES 4
+
+sem_t semaphore;
+int waiting_processes = 0;
+
+void *process(void *id) {
+    int process_id = *((int*) id);
+
+    if (sem_trywait(&semaphore) == 0) {
+        printf("Process %d acquired semaphore\n", process_id);
+    } else {
+        printf("Process %d waiting for semaphore\n", process_id);
+        waiting_processes++;
+        sem_wait(&semaphore);
+    }
+
+    return NULL;
+}
+
+int main() {
+    sem_init(&semaphore, 0, NUM_INSTANCES);
+
+    pthread_t processes[MAX_PROCESSES];
+    int process_ids[MAX_PROCESSES];
+
+    for (int i = 0; i < MAX_PROCESSES - 1; i++) {
+        process_ids[i] = i + 1;
+        pthread_create(&processes[i], NULL, process, &process_ids[i]);
+    }
+
+    process_ids[MAX_PROCESSES - 1] = MAX_PROCESSES;
+    printf("Process %d wants to acquire semaphore\n", MAX_PROCESSES);
+    process(process_ids + MAX_PROCESSES - 1);
+
+    for (int i = 0; i < MAX_PROCESSES - 1; i++) {
+        pthread_join(processes[i], NULL);
+    }
+
+    sem_destroy(&semaphore);
+
+    return 0;
+}
