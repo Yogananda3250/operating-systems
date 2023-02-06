@@ -1,0 +1,25 @@
+def SRPT(processes):
+    processes = sorted(processes, key=lambda x: x[1])
+    current_time = 0
+    waiting_times = []
+    turnaround_times = []
+    while processes:
+        current_process = processes.pop(0)
+        arrival_time = current_process[1]
+        burst_time = current_process[2]
+        if arrival_time > current_time:
+            current_time = arrival_time
+        waiting_time = current_time - arrival_time
+        waiting_times.append(waiting_time)
+        current_time += burst_time
+        turnaround_time = current_time - arrival_time
+        turnaround_times.append(turnaround_time)
+        processes = sorted(processes, key=lambda x: x[2])
+    avg_waiting_time = sum(waiting_times) / len(waiting_times)
+    avg_turnaround_time = sum(turnaround_times) / len(turnaround_times)
+    return avg_waiting_time, avg_turnaround_time
+
+processes = [("P1", 0, 5), ("P2", 1, 3), ("P3", 2, 3), ("P4", 4, 1)]
+avg_waiting_time, avg_turnaround_time = SRPT(processes)
+print("Average Waiting Time:", avg_waiting_time)
+print("Average Turnaround Time:", avg_turnaround_time)
