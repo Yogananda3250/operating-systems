@@ -1,0 +1,19 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_TRACKS 9
+
+int main() {
+    int track_positions[MAX_TRACKS] = {55, 58, 60, 70, 18, 90, 150, 160, 184};
+    int current_track = 50; // starting position of head
+    int total_head_movement = 0;
+
+    for (int i = 0; i < MAX_TRACKS; i++) {
+        total_head_movement += abs(current_track - track_positions[i]);
+        current_track = track_positions[i];
+    }
+
+    printf("Average head movement: %.2f\n", (float)total_head_movement / MAX_TRACKS);
+
+    return 0;
+}
