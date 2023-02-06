@@ -1,0 +1,39 @@
+import threading
+import time
+
+class Philosopher(threading.Thread):
+    def __init__(self, i, forkOnLeft, forkOnRight):
+        threading.Thread.__init__(self)
+        self.i = i
+        self.forkOnLeft = forkOnLeft
+        self.forkOnRight = forkOnRight
+
+    def run(self):
+        while True:
+            # philosopher is thinking
+            print("Philosopher", self.i, "is thinking")
+            time.sleep(1)
+
+            # philosopher is hungry
+            print("Philosopher", self.i, "is hungry")
+
+            # trying to get the forks
+            self.forkOnLeft.acquire()
+            print("Philosopher", self.i, "has acquired the fork on left")
+            self.forkOnRight.acquire()
+            print("Philosopher", self.i, "has acquired the fork on right")
+
+            # philosopher is eating
+            print("Philosopher", self.i, "is eating")
+            time.sleep(2)
+
+            # putting down the forks
+            self.forkOnLeft.release()
+            self.forkOnRight.release()
+
+if __name__ == "__main__":
+    forks = [threading.Lock() for i in range(5)]
+    philosophers = [Philosopher(i, forks[i % 5], forks[(i + 1) % 5]) for i in range(5)]
+
+    for p in philosophers:
+        p.start()
