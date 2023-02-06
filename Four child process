@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+void oddNumbers() {
+  for (int i = 1; i <= 100; i += 2) {
+    printf("Child 1 (PID %d) : %d\n", getpid(), i);
+  }
+}
+
+void evenNumbers() {
+  for (int i = 2; i <= 100; i += 2) {
+    printf("Child 2 (PID %d) : %d\n", getpid(), i);
+  }
+}
+
+void multiplesOfThree() {
+  for (int i = 3; i <= 100; i += 3) {
+    printf("Child 3 (PID %d) : %d\n", getpid(), i);
+  }
+}
+
+void multiplesOfFive() {
+  for (int i = 5; i <= 100; i += 5) {
+    printf("Child 4 (PID %d) : %d\n", getpid(), i);
+  }
+}
+
+int main() {
+  pid_t pid1, pid2, pid3, pid4;
+
+  pid1 = fork();
+  if (pid1 == 0) {
+    oddNumbers();
+    return 0;
+  }
+
+  pid2 = fork();
+  if (pid2 == 0) {
+    evenNumbers();
+    return 0;
+  }
+
+  pid3 = fork();
+  if (pid3 == 0) {
+    multiplesOfThree();
+    return 0;
+  }
+
+  pid4 = fork();
+  if (pid4 == 0) {
+    multiplesOfFive();
+    return 0;
+  }
+
+  wait(NULL);
+  wait(NULL);
+  wait(NULL);
+  wait(NULL);
+
+  return 0;
+}
