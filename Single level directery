@@ -1,0 +1,35 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_FILES 100
+
+struct File {
+  char name[100];
+};
+
+struct Directory {
+  char name[100];
+  struct File files[MAX_FILES];
+  int numFiles;
+};
+
+int main() {
+  struct Directory CSE;
+  strcpy(CSE.name, "CSE");
+  CSE.numFiles = 0;
+  
+  strcpy(CSE.files[CSE.numFiles].name, "A");
+  CSE.numFiles++;
+  strcpy(CSE.files[CSE.numFiles].name, "B");
+  CSE.numFiles++;
+  strcpy(CSE.files[CSE.numFiles].name, "C");
+  CSE.numFiles++;
+  
+  printf("Directory: %s\n", CSE.name);
+  printf("Files:\n");
+  for (int i = 0; i < CSE.numFiles; i++) {
+    printf("%s\n", CSE.files[i].name);
+  }
+  
+  return 0;
+}
