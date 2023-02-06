@@ -1,0 +1,40 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define MAX_PROCESSES 5
+#define MAX_BLOCKS 6
+
+int memory[MAX_BLOCKS]={300,600,350,200,750,125}; 
+int process_size[MAX_PROCESSES]={115,500,358,200,375}; 
+
+int main() 
+{
+    int i,j,k; 
+    int worst_block=0;
+    int memory_left=0;
+    int process_allocated=0;
+    for(i=0;i<MAX_PROCESSES;i++) 
+    {
+        worst_block=0; 
+        memory_left=0;
+        for(j=0;j<MAX_BLOCKS;j++) 
+        {
+            if(memory[j]>memory_left) 
+            {
+                worst_block=j;
+                memory_left=memory[j];
+            }
+        }
+        if(memory_left>=process_size[i]) 
+        {
+            process_allocated=1;
+            printf("Process %d is allocated in block %d with size %d\n",i,worst_block,process_size[i]);
+            memory[worst_block]-=process_size[i];
+        }
+        else 
+        {
+            process_allocated=0;
+            printf("Process %d is not allocated\n",i);
+        }
+    }
+    return 0;
+}
