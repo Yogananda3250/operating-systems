@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <math.h>
+
+#define NUM_TRACKS 5
+
+int main()
+{
+    int tracks[] = {55, 58, 60, 70, 18};
+    int headMovement = 0;
+
+    int currentTrack = 50; // Assume the current track is 50
+
+    printf("Track Access Sequence: ");
+    for (int i = 0; i < NUM_TRACKS; i++)
+    {
+        printf("%d ", tracks[i]);
+        headMovement += abs(currentTrack - tracks[i]);
+        currentTrack = tracks[i];
+    }
+    printf("\n");
+
+    int averageHeadMovement = headMovement / NUM_TRACKS;
+    printf("Average Head Movement: %d\n", averageHeadMovement);
+
+    return 0;
+}
