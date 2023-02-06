@@ -1,0 +1,76 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+#define P 3 
+#define R 3 
+
+// Function to calculate if the system is in deadlock state
+bool isDeadlock(int processes[], int available[], int max_matrix[][R], int allocation_matrix[][R])
+{
+    int work[R];
+    for (int i = 0; i < R; i++)
+        work[i] = available[i];
+
+    bool finish[P];
+    for (int i = 0; i < P; i++)
+        finish[i] = false;
+
+    int count = 0;
+    while (count < P)
+    {
+        bool found = false;
+        for (int i = 0; i < P; i++)
+        {
+            if (finish[i] == false)
+            {
+                int j;
+                for (j = 0; j < R; j++)
+                {
+                    if (max_matrix[i][j] - allocation_matrix[i][j] > work[j])
+                        break;
+                }
+
+                if (j == R)
+                {
+                    for (int k = 0; k < R; k++)
+                        work[k] += allocation_matrix[i][k];
+                    finish[i] = true;
+                    found = true;
+                    count++;
+                }
+            }
+        }
+
+        if (found == false)
+        {
+            printf("The system is in deadlock state.\n");
+            printf("The deadlocked processes are: ");
+            for (int i = 0; i < P; i++)
+            {
+                if (finish[i] == false)
+                    printf("%d ", i + 1);
+            }
+            return true;
+        }
+    }
+
+    printf("The system is not in deadlock state.\n");
+    return false;
+}
+
+int main()
+{
+    int processes[] = {0, 1, 2};
+    int available[] = {1, 2, 0};
+
+    int max_matrix[P][R] = {{3, 6, 8},
+                            {4, 3, 3},
+                            {3, 4, 4}};
+
+    int allocation_matrix[P][R] = {{3, 3, 3},
+                                    {2, 0, 3},
+                                    {1, 2, 4}};
+
+    isDeadlock(processes, available, max_matrix, allocation_matrix);
+    return 0;
+}
