@@ -1,0 +1,41 @@
+#include <stdio.h>
+#define N 6  // Number of memory partitions
+#define M 5  // Number of processes
+
+int main()
+{
+    int memory[N] = {300, 600, 350, 200, 750, 125};  // Memory partitions
+    int process[M] = {115, 500, 358, 200, 375};  // Processes
+    int allocation[M];  // To keep track of the allocation
+    int i, j;
+
+    // Initialize the allocation array with -1
+    for (i = 0; i < M; i++)
+        allocation[i] = -1;
+
+    // First fit algorithm
+    for (i = 0; i < M; i++)
+    {
+        for (j = 0; j < N; j++)
+        {
+            if (memory[j] >= process[i])
+            {
+                allocation[i] = j;
+                memory[j] -= process[i];
+                break;
+            }
+        }
+    }
+
+    printf("Process\tSize\tPartition\n");
+    for (i = 0; i < M; i++)
+    {
+        printf("%d\t%d\t", i + 1, process[i]);
+        if (allocation[i] != -1)
+            printf("%d\n", allocation[i] + 1);
+        else
+            printf("Not Allocated\n");
+    }
+
+    return 0;
+}
